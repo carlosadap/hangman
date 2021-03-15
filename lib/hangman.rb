@@ -1,7 +1,7 @@
 class Hangman
   attr_reader :secret_word
 
-  def initialize
+  def initialize(n_guesses = 5)
     @secret_word
     @hidden_word
     @display_word
@@ -14,7 +14,7 @@ class Hangman
     unless random_word.length.between?(5,12)
       random_word = File.readlines(fname).sample.strip  
     end
-    @secret_word = random_word
+    @secret_word = random_word.downcase
   end
 
   def create_hidden_word
@@ -56,6 +56,7 @@ class Hangman
   end
 
   def check_char(char)
+    char = char.downcase
     if @hidden_word.include?(char)
       @hidden_word.each_with_index do |c, idx|
         @display_word[idx] = c if c == char
@@ -79,11 +80,11 @@ class Hangman
   end
 
   def game_over
-    @mistakes_array.length >= 5 || @display_word.join("") == @secret_word
+    @mistakes_array.length >= n_guesses || @display_word.join("") == @secret_word
   end
 
   def check_ending
-    if @mistakes_array.length >= 5
+    if @mistakes_array.length >= n_guesses
       puts "Too many mistakes, you lost"
     else
       puts "You made it! The secret word is #{secret_word}"
