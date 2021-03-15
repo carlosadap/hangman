@@ -5,7 +5,7 @@ class Hangman
     @secret_word
     @hidden_word
     @display_word
-    @mistakes = 0
+    @mistakes_array = []
   end
 
   def create_secret_word
@@ -36,6 +36,14 @@ class Hangman
     @display_word.each { |char| print char + " "}
     print "\n"
   end
+  
+  def display_attempts
+    unless @mistakes_array.length == 0
+      puts "You tried these charactares already:"
+      @mistakes_array.each { |char| print char + " "}
+      print "\n"
+    end
+  end
 
   def get_char
     char = gets.chomp
@@ -52,28 +60,39 @@ class Hangman
       @hidden_word.each_with_index do |c, idx|
         @display_word[idx] = c if c == char
       end
+    elsif @mistakes_array.include?(char)
+      puts "You already tried this chararacter"
     else
-      made_mistake
+      made_mistake(char)
     end
   end
 
-  def made_mistake
-    @mistakes += 1
+  def made_mistake(char)
+    @mistakes_array << char
+    print "The secret word doesn't contain the character #{char}\n\n"
   end
 
   def play_turn
     display_word
+    display_attempts
     check_char(get_char)
-    puts "success"
   end
 
   def game_over
-    @mistakes >= 5 || @display_word.join("") == @secret_word
+    @mistakes_array.length >= 5 || @display_word.join("") == @secret_word
+  end
+
+  def check_ending
+    if @mistakes_array.length >= 5
+      puts "Too many mistakes, you lost"
+    else
+      puts "You made it! The secret word is #{secret_word}"
+    end
   end
 
   def run
     create_words
-    play_turn until @mistakes >= 5
-    puts "The game has ended"
+    play_turn until game_over
+    check_ending
   end
 end
