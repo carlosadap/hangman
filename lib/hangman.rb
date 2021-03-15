@@ -27,6 +27,7 @@ class Hangman
   end
 
   def create_words
+    puts 'Creating a new word...'
     create_secret_word
     create_hidden_word
     create_display_word
@@ -34,6 +35,7 @@ class Hangman
 
   def display_word
     puts 'Type a char that you think this word has'
+    puts 'Or save to save the game'
     @display_word.each { |char| print "#{char} " }
     print "\n"
   end
@@ -92,8 +94,20 @@ class Hangman
     end
   end
 
+  def ask_load
+    puts 'Would like to load a saved game? (y/n)'
+    gets.chomp == y
+  end
+
+  def load_game
+    puts 'What is the name of the file?'
+    fname = gets.chomp
+    # check if the file exists
+    # if it exists, load the data
+  end
+
   def run
-    create_words
+    ask_load ? load_game : create_words
     play_turn until game_over
     check_ending
   end
