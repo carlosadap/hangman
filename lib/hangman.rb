@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
 class Hangman
   attr_reader :secret_word
 
   def initialize(n_guesses = 5)
+    @n_guesses = n_guesses
     @secret_word
     @hidden_word
     @display_word
@@ -9,20 +12,18 @@ class Hangman
   end
 
   def create_secret_word
-    fname = "5desk.txt"
-    random_word = File.readlines(fname).sample.strip  
-    unless random_word.length.between?(5,12)
-      random_word = File.readlines(fname).sample.strip  
-    end
+    fname = '5desk.txt'
+    random_word = File.readlines(fname).sample.strip
+    random_word = File.readlines(fname).sample.strip unless random_word.length.between?(5, 12)
     @secret_word = random_word.downcase
   end
 
   def create_hidden_word
-    @hidden_word = @secret_word.split("")
+    @hidden_word = @secret_word.split('')
   end
-  
+
   def create_display_word
-    @display_word = @secret_word.split("").map { |char| "_" }
+    @display_word = @secret_word.split('').map { |_char| '_' }
   end
 
   def create_words
@@ -32,15 +33,15 @@ class Hangman
   end
 
   def display_word
-    puts "Type a char that you think this word has"
-    @display_word.each { |char| print char + " "}
+    puts 'Type a char that you think this word has'
+    @display_word.each { |char| print "#{char} " }
     print "\n"
   end
-  
+
   def display_attempts
-    unless @mistakes_array.length == 0
-      puts "You tried these charactares already:"
-      @mistakes_array.each { |char| print char + " "}
+    unless @mistakes_array.length.zero?
+      puts 'You tried these charactares already:'
+      @mistakes_array.each { |char| print "#{char} " }
       print "\n"
     end
   end
@@ -62,7 +63,7 @@ class Hangman
         @display_word[idx] = c if c == char
       end
     elsif @mistakes_array.include?(char)
-      puts "You already tried this chararacter"
+      puts 'You already tried this chararacter'
     else
       made_mistake(char)
     end
@@ -80,12 +81,12 @@ class Hangman
   end
 
   def game_over
-    @mistakes_array.length >= n_guesses || @display_word.join("") == @secret_word
+    @mistakes_array.length >= @n_guesses || @display_word.join('') == @secret_word
   end
 
   def check_ending
-    if @mistakes_array.length >= n_guesses
-      puts "Too many mistakes, you lost"
+    if @mistakes_array.length >= @n_guesses
+      puts 'Too many mistakes, you lost'
     else
       puts "You made it! The secret word is #{secret_word}"
     end
