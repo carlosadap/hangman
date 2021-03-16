@@ -58,6 +58,26 @@ class Hangman
     char == 'save'
   end
 
+  def save_game
+    puts "What is the name of the save file?"
+    fname = gets.chomp
+    if file_exists?(fname)
+      puts "File already exists"
+      save_game
+    end
+    save_file(fname)
+  end
+
+  def save_file(fname)
+    File.open("./saves/#{fname}", "w") do |f|
+      f.write "#{@n_guesses}, #{@secret_word}, #{@hidden_word}, #{@display_word}"
+    end
+  end
+
+  def file_exists?(fname)
+    File.exists?("./saves/#{fname}")
+  end
+
   def valid_char?(char)
     char.length == 1 && char.match?(/[A-Za-z]/)
   end
@@ -84,11 +104,7 @@ class Hangman
     display_word
     display_attempts
     char = get_char
-    if save_game?(char)
-      save_game
-    else
-      check_char(char)
-    end
+    save_game?(char) ? save_game : check_char(char)
   end
 
   def game_over
@@ -105,18 +121,19 @@ class Hangman
 
   def ask_load
     puts 'Would like to load a saved game? (y/n)'
-    gets.chomp == y
+    gets.chomp == "y" ? load_game : create_words
   end
 
   def load_game
     puts 'What is the name of the file?'
     fname = gets.chomp
-    # check if the file exists
-    # if it exists, load the data
+    if file_exists?(fname)
+      # if it exists, load the data
+    end
   end
 
   def run
-    ask_load ? load_game : create_words
+    ask_load
     play_turn until game_over
     check_ending
   end
