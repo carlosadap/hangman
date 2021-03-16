@@ -35,7 +35,7 @@ class Hangman
 
   def display_word
     puts 'Type a char that you think this word has'
-    puts 'Or save to save the game'
+    puts 'Or "save" to save the game'
     @display_word.each { |char| print "#{char} " }
     print "\n"
   end
@@ -50,8 +50,12 @@ class Hangman
 
   def get_char
     char = gets.chomp
-    get_char unless valid_char?(char)
+    get_char unless valid_char?(char) || save_game?(char)
     char
+  end
+
+  def save_game?(char)
+    char == 'save'
   end
 
   def valid_char?(char)
@@ -79,7 +83,12 @@ class Hangman
   def play_turn
     display_word
     display_attempts
-    check_char(get_char)
+    char = get_char
+    if save_game?(char)
+      save_game
+    else
+      check_char(char)
+    end
   end
 
   def game_over
