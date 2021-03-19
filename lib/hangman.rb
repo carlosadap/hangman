@@ -74,6 +74,7 @@ class Hangman
       n_guesses: @n_guesses,
       secret_word: @secret_word,
       hidden_word: @hidden_word,
+      mistakes_array: @mistakes_array,
       display_word: @display_word
     }
     json_data = JSON.generate(save_data)
@@ -136,17 +137,21 @@ class Hangman
     fname = gets.chomp
     if file_exists?(fname)
       save_file = File.open("./saves/#{fname}")
-      file_data = save_file.readlines.map { |line| JSON.parse(line.chomp) }
-      p file_data
-      # @n_guesses, @secret_word, @hidden_word, @display_word = file_data
-      # p @display_word
-      # @n_guesses = @n_guesses.to_i
-      # @display_word = @display_word.to_a
+      save_data = JSON.parse(save_file.read)
+      update_values(save_data)
       save_file.close
     else
       puts "The file '#{fname}' doesn't exist"
       ask_load
     end
+  end
+
+  def update_values(save_data)
+    @n_guesses = save_data["n_guesses"]
+    @secret_word = save_data["secret_word"]
+    @hidden_word = save_data["hidden_word"]
+    @display_word = save_data["display_word"]
+    @mistakes_array = save_data["mistakes_array"]
   end
 
   def run
