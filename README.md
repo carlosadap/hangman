@@ -22,3 +22,11 @@ You will be building a simple command line Hangman game where one player plays a
 5. Now implement the functionality where, at the start of any turn, instead of making a guess the player should also have the option to save the game. Remember what you learned about serializing objects… you can serialize your game class too!
 
 6. When the program first loads, add in an option that allows you to open one of your saved games, which should jump you exactly back to where you were when you saved. Play on!
+
+---
+
+## How To Play
+
+To play this game on the console, you should first load the hangman.rb file, create a new Hangman class, then #run the game.
+
+The saves can be found on the "saves" folder.
