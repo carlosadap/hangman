@@ -69,9 +69,7 @@ class Hangman
   end
 
   def save_file(fname)
-    File.open("./saves/#{fname}", "w") do |f|
-      f.write "#{@n_guesses}, #{@secret_word}, #{@hidden_word}, #{@display_word}"
-    end
+    File.write("./saves/#{fname}", "#{@n_guesses}\n#{@secret_word}\n#{@hidden_word}\n#{@display_word}")
   end
 
   def file_exists?(fname)
@@ -114,8 +112,9 @@ class Hangman
   def check_ending
     if @mistakes_array.length >= @n_guesses
       puts 'Too many mistakes, you lost'
+      puts "The secret word was #{secret_word}"
     else
-      puts "You made it! The secret word is #{secret_word}"
+      puts "You made it! The secret word was #{secret_word}"
     end
   end
 
@@ -128,7 +127,15 @@ class Hangman
     puts 'What is the name of the file?'
     fname = gets.chomp
     if file_exists?(fname)
-      # if it exists, load the data
+      save_file = File.open("./saves/#{fname}")
+      file_data = save_file.readlines.map(&:chomp)
+      puts file_data
+      @n_guesses, @secret_word, @hidden_word, @display_word = file_data
+      @n_guesses = @n_guesses.to_i
+      save_file.close
+    else
+      puts "The file '#{fname}' doesn't exist"
+      ask_load
     end
   end
 
