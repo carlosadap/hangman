@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'json'
 
 class Hangman
@@ -60,10 +61,10 @@ class Hangman
   end
 
   def save_game
-    puts "What is the name of the save file?"
+    puts 'What is the name of the save file?'
     fname = gets.chomp
     if file_exists?(fname)
-      puts "File already exists"
+      puts 'File already exists'
       save_game
     end
     save_file(fname)
@@ -82,7 +83,7 @@ class Hangman
   end
 
   def file_exists?(fname)
-    File.exists?("./saves/#{fname}")
+    File.exist?("./saves/#{fname}")
   end
 
   def valid_char?(char)
@@ -129,7 +130,7 @@ class Hangman
 
   def ask_load
     puts 'Would like to load a saved game? (y/n)'
-    gets.chomp == "y" ? load_game : create_words
+    gets.chomp == 'y' ? load_game : create_words
   end
 
   def load_game
@@ -147,11 +148,11 @@ class Hangman
   end
 
   def update_values(save_data)
-    @n_guesses = save_data["n_guesses"]
-    @secret_word = save_data["secret_word"]
-    @hidden_word = save_data["hidden_word"]
-    @display_word = save_data["display_word"]
-    @mistakes_array = save_data["mistakes_array"]
+    @n_guesses = save_data['n_guesses']
+    @secret_word = save_data['secret_word']
+    @hidden_word = save_data['hidden_word']
+    @display_word = save_data['display_word']
+    @mistakes_array = save_data['mistakes_array']
   end
 
   def run
