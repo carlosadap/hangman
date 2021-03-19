@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'json'
 
 class Hangman
   attr_reader :secret_word
@@ -69,7 +70,14 @@ class Hangman
   end
 
   def save_file(fname)
-    File.write("./saves/#{fname}", "#{@n_guesses}\n#{@secret_word}\n#{@hidden_word}\n#{@display_word}")
+    save_data = {
+      n_guesses: @n_guesses,
+      secret_word: @secret_word,
+      hidden_word: @hidden_word,
+      display_word: @display_word
+    }
+    json_data = JSON.generate(save_data)
+    File.write("./saves/#{fname}", json_data)
   end
 
   def file_exists?(fname)
@@ -128,10 +136,12 @@ class Hangman
     fname = gets.chomp
     if file_exists?(fname)
       save_file = File.open("./saves/#{fname}")
-      file_data = save_file.readlines.map(&:chomp)
-      puts file_data
-      @n_guesses, @secret_word, @hidden_word, @display_word = file_data
-      @n_guesses = @n_guesses.to_i
+      file_data = save_file.readlines.map { |line| JSON.parse(line.chomp) }
+      p file_data
+      # @n_guesses, @secret_word, @hidden_word, @display_word = file_data
+      # p @display_word
+      # @n_guesses = @n_guesses.to_i
+      # @display_word = @display_word.to_a
       save_file.close
     else
       puts "The file '#{fname}' doesn't exist"
